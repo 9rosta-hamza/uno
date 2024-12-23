@@ -76,7 +76,7 @@ public class Deck2 {
     }
     public void showdeck() {
     	for (int j = 0; j < cards.length; j++) {
-    		System.out.println("the"+j+"card is"+this.cards[j]);
+    		System.out.println("the"+j+"card is "+this.cards[j]);
 			
 		}
     }
