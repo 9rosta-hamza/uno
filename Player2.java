@@ -20,14 +20,15 @@ public class Player2 {
     
 
     // Draw a card from the deck and add it to the player's hand
-    public void drawplayerCard(Deck2 deck,boolean desicion) {
+    public void drawplayerCard(Deck2 deck) {
         Card2 newcard=deck.drawCard();
         if (newcard != null) {
         	 hand[cardCount] = newcard; // Add new card to hand
              cardCount=cardCount+1;
         } else {
-            System.out.println(name + " cannot draw a card because the deck is empty!,the game is end with draw");
-            desicion=true;
+            System.out.println(name + " cannot draw a card because the deck is empty!");
+            hand[cardCount] = newcard; // Add new card to hand
+            cardCount=cardCount+1;
             
         }
            
@@ -54,7 +55,7 @@ public class Player2 {
         
         return null; // No matching card found
     }
-public boolean search(Card2 topCard) {
+public boolean check(Card2 topCard) {
 	for (int i = 0; i < cardCount; i++) {
 		if (hand[i].matches(topCard)) {
 			return true;
