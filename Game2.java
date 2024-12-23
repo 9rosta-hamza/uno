@@ -11,15 +11,24 @@ public class Game2 {
     private int currentPlayerIndex; // The current player's index
     private boolean direction; // True for clockwise, false for counter-clockwise
     private boolean decision;//the decision id there is a winner(true) or not (false)  
+    private boolean draw;
     private Scanner scanner;
     private Card2 playedCard ;
 
+	public boolean getDraw() {
+		return draw;
+	}
 
+	public boolean setDraw(boolean draw) {
+		this.draw = draw;
+		return draw;
+	}
     // Constructor to initialize the game
     public Game2() {
         deck = new Deck2(); // Initialize the deck
         scanner = new Scanner(System.in);
         decision=false;
+        setDraw(false);
 
         // Initialize players (max of 4 players)
       
@@ -63,7 +72,7 @@ public class Game2 {
 
             System.out.println("\nTop card: " + topCard);
             currentPlayer.showHand(); // Show current player's hand
-           if ( currentPlayer.search(topCard)==true) {
+           if ( currentPlayer.check(topCard)==true) {
 			
 		
 
@@ -75,11 +84,11 @@ public class Game2 {
             scanner.nextLine();
             
             
-            while ((cardselected<=0||cardselected>currentPlayer.getcardCount())) {
-            	System.out.println("selec the the card you want to play 1 2 3.. ");
-            	cardselected=scanner.nextInt();
-            	scanner.nextLine();
-       			}
+         //   while ((cardselected<=0||cardselected>currentPlayer.getcardCount())) {
+            	//System.out.println("selec the the card you want to play 1 2 3.. ");
+            	//cardselected=scanner.nextInt();
+            	//scanner.nextLine();
+       			//}
             
              playedCard = currentPlayer.chooseCardToPlay((cardselected-1),topCard);
              while (playedCard==null) {
@@ -115,14 +124,26 @@ public class Game2 {
                 if (playedCard.getType() == Card2.Type.DRAW_TWO) {
                     // Skip next player's turn and make them draw two cards
                     currentPlayerIndex = nextPlayerIndex();
-                    players[currentPlayerIndex].drawplayerCard(deck,decision);
-                    players[currentPlayerIndex].drawplayerCard(deck,decision);
+                    players[currentPlayerIndex].drawplayerCard(deck);
+                    if(players[currentPlayerIndex].getlastdrawncard()==null) {
+                    	decision=true;
+                    	setDraw(true);
+                    	break;
+                    }
+                    players[currentPlayerIndex].drawplayerCard(deck);
+                    if(players[currentPlayerIndex].getlastdrawncard()==null) {
+                    	decision=true;
+                    	setDraw(true);
+                    	break;
+                    }
                 }
             } else {
                 // If no valid card, draw a card
                 System.out.println(currentPlayer.getName() + " draws a card.");
-                currentPlayer.drawplayerCard(deck,decision);
-                if(decision==true) {
+                currentPlayer.drawplayerCard(deck);
+                if(currentPlayer.getlastdrawncard()==null) {
+                	decision=true;
+                	setDraw(true);
                 	break;
                 }
                 Card2 drawnCard = currentPlayer.chooseCardToPlay((currentPlayer.getcardCount())-1,topCard);
@@ -142,8 +163,8 @@ public class Game2 {
                      if (drawnCard.getType() == Card2.Type.DRAW_TWO) {
                          // Skip next player's turn and make them draw two cards
                          currentPlayerIndex = nextPlayerIndex();
-                         players[currentPlayerIndex].drawplayerCard(deck,decision);
-                         players[currentPlayerIndex].drawplayerCard(deck,decision);
+                         players[currentPlayerIndex].drawplayerCard(deck);
+                         players[currentPlayerIndex].drawplayerCard(deck);
                      }
                 }
             }
@@ -151,6 +172,10 @@ public class Game2 {
             // Move to the next player
             currentPlayerIndex = nextPlayerIndex();
         }
+        if(getDraw()==true) {
+        	System.out.println("the game end with a draw");        	
+        }
+        
     }
 
     // Method to get the next player index based on direction
@@ -169,4 +194,6 @@ public class Game2 {
         Game2 game = new Game2();
         game.startGame();
     }
+
+
 }
